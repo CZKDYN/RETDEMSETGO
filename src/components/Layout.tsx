@@ -120,7 +120,16 @@ export default function Layout({
             }[location.pathname] || 'Your learning space';
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault();
+          const main = document.getElementById('main-content');
+          main?.focus();
+          main?.scrollIntoView();
+        }}
+      >
         Skip to content
       </a>
       {menu && (
@@ -281,7 +290,7 @@ export default function Layout({
             </span>
           </div>
         </header>
-        <main id="main-content" className="main-content">
+        <main id="main-content" tabIndex={-1} className="main-content">
           {!state.storageAvailable && (
             <div role="status" className="notice">
               Your browser could not save progress. Activities still work in this session.

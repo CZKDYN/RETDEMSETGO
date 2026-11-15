@@ -18,6 +18,7 @@ The Vite terminal prints the development address. In restricted cloud workspaces
 
 ```sh
 npm run build          # TypeScript checks + optimized production files in dist/
+npm run build:pages    # GitHub Pages build with repository base and hash routes
 npm run preview        # Serve the production build for local verification
 npm run lint           # ESLint, TypeScript, React Hooks rules
 npm test               # Publication checks, scoring, shuffle, move controls
@@ -115,6 +116,20 @@ The only persistent application data is the `retdemsetgo-progress-v1` entry in b
 
 Features include a skip link, native radios and dialog, labeled reorder controls, keyboard drawer navigation, live feedback, visible interactive focus, reduced-motion support, and responsive layouts. Automated WCAG A/AA scans are part of the browser suite, but do not establish full accessibility conformance; manual assistive-technology and cross-browser evaluation remain appropriate before release.
 
-Serve `dist/` with an HTTPS static host and configure all application routes to fall back to `index.html`. A basic static server without SPA fallback will fail on direct links such as `/skill/fnp-skill-1`. Vite’s development and preview servers already handle these routes. This configuration targets a domain root; deployment at a repository subpath (for example GitHub Pages) requires a matching Vite `base` and router basename or a hash-router strategy. Nothing has been deployed or pushed to `main` by this implementation.
+The default `npm run build` targets a domain root with browser-history routes. Serve `dist/` with an HTTPS static host and configure all application routes to fall back to `index.html`. A basic static server without SPA fallback will fail on direct links such as `/skill/fnp-skill-1`. Vite’s development and preview servers already handle these routes.
+
+### Deploy with GitHub Pages
+
+The repository includes a **manual** deployment workflow. Pushing code alone does not publish the website.
+
+1. Open [the repository’s Pages settings](https://github.com/CZKDYN/RETDEMSETGO/settings/pages). Under **Build and deployment → Source**, select **GitHub Actions**. Pages availability depends on the repository visibility and GitHub plan.
+2. Open **Actions → Deploy GitHub Pages → Run workflow**. Select `development/learning-platform` (or the default branch containing these files) and run it. If the workflow is not listed, ensure `.github/workflows/deploy-pages.yml` is present on the repository’s default branch; GitHub lists manually runnable workflows from the default branch.
+3. Wait for both the build and deploy jobs to succeed. The deployment job and Pages settings provide the actual published URL. For this repository, the expected URL without a custom domain is `https://czkdyn.github.io/RETDEMSETGO/`.
+
+The workflow installs from the lockfile, runs lint and unit tests, builds, and uploads `dist/`. GitHub supplies its own workflow authentication; no personal access token or application secret is required. A newly created `github-pages` deployment environment may need to allow the selected branch under **Settings → Environments → github-pages → Deployment branches and tags**. Do not bypass any existing environment approval requirements.
+
+`npm run build:pages` builds with `/RETDEMSETGO/` as the asset base and a hash router so static hosting supports direct module links and refreshes, for example `/RETDEMSETGO/#/demo/fnp-skill-1`. For a custom domain or renamed repository, update the Pages `base` in `vite.config.ts` before building. To inspect this exact build locally, run `npm run build:pages` followed by `npm run preview -- --mode pages`, and open the repository path printed by Vite.
+
+The deployment remains a **prototype with unpublished clinical placeholders** and explicitly nonclinical activities. Publishing it does not establish clinical validation or institutional approval. Nothing in this implementation requires pushing directly to `main`.
 
 Each cloud task already has an isolated checkout. Use the existing `/workspace/RETDEMSETGO` checkout; do not create a Git worktree unless explicitly requested. Reinstall only if dependencies need refreshing. Runtime processes must be restarted in a new task even if the installed filesystem is retained.
