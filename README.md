@@ -122,6 +122,8 @@ The default `npm run build` targets a domain root with browser-history routes. S
 
 The repository includes a **manual** deployment workflow. Pushing code alone does not publish the website.
 
+**A white page after deployment usually means the source branch was published instead of the compiled app.** Do not select **Deploy from a branch → development/learning-platform → /(root)**: that serves the development `index.html`, which references TypeScript source the browser cannot run. Use the GitHub Actions source and the workflow below to publish the built `dist/` directory. The workflow registers and checks itself when its file is pushed, but its deploy job runs only when you choose **Run workflow**.
+
 1. Open [the repository’s Pages settings](https://github.com/CZKDYN/RETDEMSETGO/settings/pages). Under **Build and deployment → Source**, select **GitHub Actions**. Pages availability depends on the repository visibility and GitHub plan.
 2. Open **Actions → Deploy GitHub Pages → Run workflow**. Select `development/learning-platform` (or the default branch containing these files) and run it. If the workflow is not listed, ensure `.github/workflows/deploy-pages.yml` is present on the repository’s default branch; GitHub lists manually runnable workflows from the default branch.
 3. Wait for both the build and deploy jobs to succeed. The deployment job and Pages settings provide the actual published URL. For this repository, the expected URL without a custom domain is `https://czkdyn.github.io/RETDEMSETGO/`.

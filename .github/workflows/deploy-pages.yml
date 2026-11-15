@@ -2,6 +2,11 @@ name: Deploy GitHub Pages
 
 # Publication stays manual: pushing code does not publish the clinical prototype.
 on:
+  # Register and check this workflow on the initial push, so it is listed in
+  # Actions even before its first manual deployment.
+  push:
+    branches: [development/learning-platform]
+    paths: [.github/workflows/deploy-pages.yml]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +35,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     needs: build
     runs-on: ubuntu-latest
     permissions:
